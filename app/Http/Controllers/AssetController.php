@@ -6,7 +6,6 @@ use App\Models\Asset;
 use App\Models\Image;
 use App\Models\Offer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -98,9 +97,9 @@ class AssetController extends Controller
         # upload images
         for ($index = 0; $index < 3; $index++) {
             if ($request->hasFile('image' . $index) != null) {
-                $url = Storage::putFile('images', $request->file('image' . $index));
+                $path = Storage::disk('s3')->put('images', $request->image);
                 Image::create([
-                    'url' => $url,
+                    'url' => $path,
                     'asset_id' => $asset->id
                 ]);
             }
