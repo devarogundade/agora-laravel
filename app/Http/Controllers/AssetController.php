@@ -11,47 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AssetController extends Controller
 {
-    # asset owned by a user
-    public function userAssets(Request $request)
-    {
-        $user = $request->user();
-
-        $assets = Asset::where('user_id', $user->id)
-            ->where('type', $request->type)
-            ->get();
-
-        $rentAssets = Offer::where('status', 'accepted')
-            ->where('user_id', $user->id)
-            ->where('expires_at', '>', now()) # active only
-            ->with('offerable')
-            ->get();
-
-        if (!$assets) {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => 'Something went wrong'
-                ],
-                200
-            );
-        }
-
-        foreach ($assets as $asset) {
-            $asset->occupied = Utils::getOccupiedUnits($asset);
-        }
-
-        $assets->rented = $rentAssets;
-
-        return response()->json(
-            [
-                'status' => true,
-                'message' => 'Assets found',
-                'data' => $assets
-            ],
-            200
-        );
-    }
-
     # create a new asset
     public function create(Request $request)
     {

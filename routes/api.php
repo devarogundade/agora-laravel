@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('delete/asset', [AssetController::class, 'delete']);
 
     # user assets
-    Route::get('user/assets', [AssetController::class, 'userAssets']);
+    Route::get('user/assets', [UserController::class, 'assets']);
 
     # create offer
     Route::get('create/offer', [OfferController::class, 'create']);
