@@ -97,7 +97,8 @@ class AssetController extends Controller
         # upload images
         for ($index = 0; $index < 3; $index++) {
             if ($request->hasFile('image' . $index) != null) {
-                $path = Storage::disk('s3')->put('images', $request->image);
+                $path = Storage::disk('s3')->put('images', $request->file('image' . $index));
+                $path = Storage::url($path);
                 Image::create([
                     'url' => $path,
                     'asset_id' => $asset->id
