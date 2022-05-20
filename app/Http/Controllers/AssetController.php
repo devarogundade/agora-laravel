@@ -98,23 +98,10 @@ class AssetController extends Controller
         # upload images
         for ($index = 0; $index < 3; $index++) {
             if ($request->hasFile('image' . $index) != null) {
-                $file = $request->file('image' . $index);
-
-                $filename = pathinfo($file, PATHINFO_FILENAME);
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-
-                $path = $filename . '.' . $extension;
-                Log::debug($path);
-
-                $upload = Storage::putFile($path, $file);
-                if (!$upload) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Can not upload image ' . $index
-                    ], 200);
-                }
-
+                $upload = Storage::putFile('images', $request->file('image' . $index));
+                Log::debug($upload, ['upload']);
                 $url = Storage::url($upload);
+                Log::debug($url, ['url']);
                 Image::create([
                     'url' => $url,
                     'asset_id' => $asset->id
