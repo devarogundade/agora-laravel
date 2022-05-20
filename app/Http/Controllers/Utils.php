@@ -27,7 +27,7 @@ class Utils extends Controller
     {
         $offers = $asset->offers()
             ->where('status', 'accepted')
-            ->where('expires_at', '>', now()) # active only
+            // ->where('expires_at', '>', now()) # active only
             ->get();
 
         $occupied = 0;

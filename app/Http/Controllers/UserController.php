@@ -63,7 +63,7 @@ class UserController extends Controller
 
         $rentAssets = Offer::where('status', 'accepted')
             ->where('user_id', $user->id)
-            ->where('expires_at', '>', now()) # active only
+            // ->where('expires_at', '>', now()) # active only
             ->with('offerable')
             ->get();
 
