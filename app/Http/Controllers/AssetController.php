@@ -111,17 +111,21 @@ class AssetController extends Controller
     # get all assets
     public function assets(Request $request)
     {
-        $assets = [];
+        $assets = Asset::orderBy('updated_at', 'desc');
 
-        if ($request->type == 'all') {
-            $assets = Asset::orderBy('updated_at', 'desc')
-                ->get();
-        } else {
-            $assets = Asset::orderBy('updated_at', 'desc')
-                ->where('type', $request->type)
+        if ($request->type != '' && $request->type != 'all') {
+            $assets = $assets->where('type', $request->type)
                 ->orWhere('type', ucfirst($request->type))
-                ->get();
+                ->orWhere('type', ucwords($request->type));
         }
+
+        if ($request->state != '' && $request->state != 'all') {
+            $assets = $assets->where('state', $request->state)
+                ->orWhere('state', ucfirst($request->state))
+                ->orWhere('state', ucwords($request->state));
+        }
+
+        $assets = $assets->get();
 
         if (!$assets) {
             return response()->json(
