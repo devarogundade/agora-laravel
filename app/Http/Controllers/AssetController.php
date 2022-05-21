@@ -119,6 +119,7 @@ class AssetController extends Controller
         } else {
             $assets = Asset::orderBy('updated_at', 'desc')
                 ->where('type', $request->type)
+                ->orWhere('type', ucfirst($request->type))
                 ->get();
         }
 
