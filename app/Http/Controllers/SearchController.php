@@ -22,7 +22,31 @@ class SearchController extends Controller
                 $query->orWhere('metadata', 'like', "%{$keyword}%");
                 $query->orWhere('about', 'like', "%{$keyword}%");
             }
-        })->get();
+
+            foreach ($keywords as $keyword) {
+                $query->selectRaw(function ($querySelect) use ($keyword) {
+                    $querySelect->selectRaw('
+                        Round ((Char_length(Concat(
+                            type,
+                            state,
+                            location,
+                            name,
+                            price,
+                            metadata,
+                            about,
+                        )) - Char_length(REPLACE ( Concat(
+                            type,
+                            state,
+                            location,
+                            name,
+                            price,
+                            metadata,
+                            about,
+                        ), "' . $keyword . '", ""))) / Char_length("' . $keyword . '"))  AS count
+                    ');
+                });
+            }
+        })->orderBy('count','DESC')->get();
 
         if (!$assets) {
             return response()->json(
