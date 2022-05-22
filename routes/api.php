@@ -26,9 +26,6 @@ Route::get('asset', [AssetController::class, 'asset']);
 # location assets
 Route::get('assets/location', [AssetController::class, 'locationAssets']);
 
-# speech
-Route::get('speech-token', [SearchController::class, 'getSpeechToken']);
-
 # middleware
 Route::middleware(['auth:sanctum'])->group(function () {
     # user
