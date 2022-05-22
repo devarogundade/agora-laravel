@@ -14,13 +14,13 @@ class SearchController extends Controller
 
         $assets = Asset::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
-                $query->orWhere('name', 'like', "%{$keyword}%");
-                $query->orWhere('about', 'like', "%{$keyword}%");
+                $query->orWhere('type', 'like', "%{$keyword}%");
                 $query->orWhere('state', 'like', "%{$keyword}%");
                 $query->orWhere('location', 'like', "%{$keyword}%");
+                $query->orWhere('name', 'like', "%{$keyword}%");
                 $query->orWhere('price', 'like', "% {$keyword} %");
                 $query->orWhere('metadata', 'like', "%{$keyword}%");
-                $query->orWhere('type', 'like', "%{$keyword}%");
+                $query->orWhere('about', 'like', "%{$keyword}%");
             }
         })->get();
 
