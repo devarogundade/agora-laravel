@@ -20,6 +20,7 @@ class SearchController extends Controller
                 $query->orWhere('location', 'like', "%{$keyword}%");
                 $query->orWhere('price', 'like', "% {$keyword} %");
                 $query->orWhere('metadata', 'like', "%{$keyword}%");
+                $query->orWhere('type', 'like', "%{$keyword}%");
             }
         })->get();
 
