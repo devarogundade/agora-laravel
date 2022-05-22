@@ -23,30 +23,20 @@ class SearchController extends Controller
                 $query->orWhere('about', 'like', "%{$keyword}%");
             }
 
-            foreach ($keywords as $keyword) {
-                $query->selectRaw(function ($querySelect) use ($keyword) {
-                    $querySelect->selectRaw('
-                        Round ((Char_length(Concat(
-                            type,
-                            state,
-                            location,
-                            name,
-                            price,
-                            metadata,
-                            about,
-                        )) - Char_length(REPLACE ( Concat(
-                            type,
-                            state,
-                            location,
-                            name,
-                            price,
-                            metadata,
-                            about,
-                        ), "' . $keyword . '", ""))) / Char_length("' . $keyword . '"))  AS count
-                    ');
-                });
-            }
-        })->orderBy('count','DESC')->get();
+            // foreach ($keywords as $keyword) {
+            //     $query->selectRaw(function ($querySelect) use ($keyword) {
+            //         $querySelect->selectRaw('
+            //         SELECT email,
+            //         name,
+            //         Round ((Char_length(Concat(email, name)) - Char_length(REPLACE ( Concat(email,name), "first_keyword", ""))) / Char_length("first_keyword"))
+            //         + Round ((Char_length(Concat(email, name)) - Char_length(REPLACE ( Concat(email,name), "second_keyword", ""))) / Char_length("second_keyword"))  AS count
+            //  FROM   users
+            //  Having count >0
+            //  ORDER  BY count DESC;
+            //         ');
+            //     });
+            // }
+        })->get();
 
         if (!$assets) {
             return response()->json(
