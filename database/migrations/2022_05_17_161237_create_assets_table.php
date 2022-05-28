@@ -23,6 +23,7 @@ return new class extends Migration
             $table->timestamp('verified_at')->nullable();
             $table->longText('location'); # a google places location json data
             $table->string('state');
+            $table->string('video')->nullable();
             $table->longText('metadata'); # json of attributes
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
