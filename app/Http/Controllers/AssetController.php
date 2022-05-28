@@ -35,6 +35,8 @@ class AssetController extends Controller
             ], 200);
         }
 
+        $video = $request->has('video') ? $request->video : '';
+
         $asset = Asset::create([
             'name' => $request->name,
             'unit' => $request->unit,
@@ -45,6 +47,7 @@ class AssetController extends Controller
             'metadata' => $request->metadata,
             'user_id' => $user->id,
             'type' => $request->type,
+            'video' => $video,
         ]);
 
         if (!$asset) {
@@ -66,21 +69,6 @@ class AssetController extends Controller
             }
         }
 
-        # upload video
-        if ($request->hasFile('video') != null) {
-            $path = Storage::put('videos', $request->file('video'));
-            $path = Storage::url($path);
-            Video::create([
-                'url' => $path,
-                'asset_id' => $asset->id
-            ]);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Asset has been listed',
-            'data' => $asset
-        ], 200);
     }
 
     # delete a asset
