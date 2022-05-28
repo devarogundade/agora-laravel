@@ -39,7 +39,7 @@ class OfferController extends Controller
         }
 
         $available = $asset->unit - Utils::getOccupiedUnits($asset);
-        if ($available < $request->plot) {
+        if ($available < $request->unit) {
             return response()->json(
                 [
                     'status' => false,
@@ -49,7 +49,7 @@ class OfferController extends Controller
             );
         }
 
-        $offer = $user->offers()->create([
+        $offer = Offer::create([
             'duration' => $request->duration,
             'unit' => $request->unit,
             'price' => $request->price,
