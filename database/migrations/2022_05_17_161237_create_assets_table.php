@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('price'); # price per unit unit per 24hr
             $table->longText('about');
             $table->timestamp('verified_at')->nullable();
-            $table->longText('location'); # a descriptive address
+            $table->longText('location'); # a google places location json data
             $table->string('state');
             $table->longText('metadata'); # json of attributes
             $table->unsignedBigInteger('user_id');

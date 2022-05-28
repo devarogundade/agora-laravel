@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\Image;
 use App\Models\Offer;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -63,6 +64,16 @@ class AssetController extends Controller
                     'asset_id' => $asset->id
                 ]);
             }
+        }
+
+        # upload video
+        if ($request->hasFile('video') != null) {
+            $path = Storage::put('videos', $request->file('video'));
+            $path = Storage::url($path);
+            Video::create([
+                'url' => $path,
+                'asset_id' => $asset->id
+            ]);
         }
 
         return response()->json([

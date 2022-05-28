@@ -10,10 +10,14 @@ class Asset extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $with = ['images', 'offers'];
+    protected $with = ['images', 'offers', 'video'];
 
     public function images() {
         return $this->hasMany(Image::class);
+    }
+
+    public function video() {
+        return $this->hasOne(Video::class);
     }
 
     public function offers() {
