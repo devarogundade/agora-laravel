@@ -69,6 +69,11 @@ class AssetController extends Controller
             }
         }
 
+        return response()->json([
+            'status' => true,
+            'message' => 'Asset has been listed',
+            'data' => $asset,
+        ], 200);
     }
 
     # delete a asset
