@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
@@ -11,31 +12,33 @@ class SearchController extends Controller
     {
         $keywords = explode(" ", $request->text);
 
-        $base_query = Asset::where('id', '!=', NULL);
+        $assets = Asset::where(function ($query) use ($keywords) {
+            foreach ($keywords as $keyword) {
+                $query->orWhere('type', 'like', "%{$keyword}%");
+                $query->orWhere('state', 'like', "%{$keyword}%");
+                $query->orWhere('location', 'like', "%{$keyword}%");
+                $query->orWhere('name', 'like', "%{$keyword}%");
+                $query->orWhere('price', 'like', "% {$keyword} %");
+                $query->orWhere('metadata', 'like', "%{$keyword}%");
+                $query->orWhere('about', 'like', "%{$keyword}%");
 
-        foreach ($keywords as $keyword) {
-            $base_query->where(function ($query) use ($keyword) {
-                $query->where('type', 'like', '%' . $keyword . '%')
-                    ->orWhere('state', 'like', '%' . $keyword . '%')
-                    ->orWhere('location', 'like', '%' . $keyword . '%')
-                    ->orWhere('name', 'like', '%' . $keyword . '%')
-                    ->orWhere('price', 'like', '%' . $keyword . '%')
-                    ->orWhere('metadata', 'like', '%' . $keyword . '%')
-                    ->orWhere('about', 'like', '%' . $keyword . '%');
-            });
-        }
+                $query->orWhere('type', 'like', "%" . strtolower($keyword) . "%");
+                $query->orWhere('state', 'like', "%" . strtolower($keyword) . "%");
+                $query->orWhere('location', 'like', "%" . strtolower($keyword) . "%");
+                $query->orWhere('name', 'like', "%" . strtolower($keyword) . "%");
+                $query->orWhere('price', 'like', "%" . strtolower($keyword) . "%");
+                $query->orWhere('metadata', 'like', "%" . strtolower($keyword) . "%");
+                $query->orWhere('about', 'like', "%" . strtolower($keyword) . "%");
 
-        foreach ($keywords as $keyword) {
-            $base_query->selectRaw(
-                '
-        Round (
-            (Char_length(Concat(location, name)) - Char_length(REPLACE ( Concat(location,name), "' . $keyword . '", ""))
-        ) / Char_length("' . $keyword . '")
-        ) AS count' .  $keyword
-            )->orderBy("count$keyword", "desc");
-        }
-
-        $assets = $base_query->paginate(20);
+                $query->orWhere('type', 'like', "%" . strtoupper($keyword) . "%");
+                $query->orWhere('state', 'like', "%" . strtoupper($keyword) . "%");
+                $query->orWhere('location', 'like', "%" . strtoupper($keyword) . "%");
+                $query->orWhere('name', 'like', "%" . strtoupper($keyword) . "%");
+                $query->orWhere('price', 'like', "%" . strtoupper($keyword) . "%");
+                $query->orWhere('metadata', 'like', "%" . strtoupper($keyword) . "%");
+                $query->orWhere('about', 'like', "%" . strtoupper($keyword) . "%");
+            }
+        })->get();
 
         if (!$assets) {
             return response()->json(
@@ -56,4 +59,5 @@ class SearchController extends Controller
             200
         );
     }
+
 }
