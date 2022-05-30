@@ -14,29 +14,29 @@ class SearchController extends Controller
 
         $assets = Asset::where(function ($query) use ($keywords) {
             foreach ($keywords as $keyword) {
-                $query->orWhere('type', 'like', "%{$keyword}%");
-                $query->orWhere('state', 'like', "%{$keyword}%");
-                $query->orWhere('location', 'like', "%{$keyword}%");
-                $query->orWhere('name', 'like', "%{$keyword}%");
-                $query->orWhere('price', 'like', "% {$keyword} %");
-                $query->orWhere('metadata', 'like', "%{$keyword}%");
-                $query->orWhere('about', 'like', "%{$keyword}%");
+                $query->orWhere('type', 'like', "%{$keyword}%")
+                    ->orWhere('state', 'like', "%{$keyword}%")
+                    ->orWhere('location', 'like', "%{$keyword}%")
+                    ->orWhere('name', 'like', "%{$keyword}%")
+                    ->orWhere('price', 'like', "% {$keyword} %")
+                    ->orWhere('metadata', 'like', "%{$keyword}%")
+                    ->orWhere('about', 'like', "%{$keyword}%");
 
-                $query->orWhere('type', 'like', "%" . strtolower($keyword) . "%");
-                $query->orWhere('state', 'like', "%" . strtolower($keyword) . "%");
-                $query->orWhere('location', 'like', "%" . strtolower($keyword) . "%");
-                $query->orWhere('name', 'like', "%" . strtolower($keyword) . "%");
-                $query->orWhere('price', 'like', "%" . strtolower($keyword) . "%");
-                $query->orWhere('metadata', 'like', "%" . strtolower($keyword) . "%");
-                $query->orWhere('about', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('type', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('state', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('location', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('name', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('price', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('metadata', 'like', "%" . strtolower($keyword) . "%");
+                // $query->orWhere('about', 'like', "%" . strtolower($keyword) . "%");
 
-                $query->orWhere('type', 'like', "%" . strtoupper($keyword) . "%");
-                $query->orWhere('state', 'like', "%" . strtoupper($keyword) . "%");
-                $query->orWhere('location', 'like', "%" . strtoupper($keyword) . "%");
-                $query->orWhere('name', 'like', "%" . strtoupper($keyword) . "%");
-                $query->orWhere('price', 'like', "%" . strtoupper($keyword) . "%");
-                $query->orWhere('metadata', 'like', "%" . strtoupper($keyword) . "%");
-                $query->orWhere('about', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('type', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('state', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('location', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('name', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('price', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('metadata', 'like', "%" . strtoupper($keyword) . "%");
+                // $query->orWhere('about', 'like', "%" . strtoupper($keyword) . "%");
             }
         })->get();
 
@@ -59,5 +59,4 @@ class SearchController extends Controller
             200
         );
     }
-
 }
