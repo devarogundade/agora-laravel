@@ -6,7 +6,7 @@ use App\Models\Asset;
 
 class Utils extends Controller
 {
-    public static $PLATFORM_FEE = 0.2; # percentage
+    public static $PLATFORM_FEE = 0.05; # percentage
 
     public static function getFee($amount) {
         return $amount * self::$PLATFORM_FEE;
