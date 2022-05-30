@@ -35,7 +35,7 @@ class SearchController extends Controller
             )->orderBy("count$keyword", "desc");
         }
 
-        $assets = $base_query->get();
+        $assets = $base_query->paginate(20);
 
         if (!$assets) {
             return response()->json(
