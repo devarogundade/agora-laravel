@@ -58,14 +58,22 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $assets = Asset::where('user_id', $user->id)
-            ->get();
+        $assets = [];
 
-        $rentAssets = Offer::where('status', 'accepted')
-            ->where('user_id', $user->id)
-            // ->where('expires_at', '>', now()) # active only
-            ->with('asset')
-            ->get();
+        if ($user->purpose == 1) { // investor
+            $assets = Asset::where('user_id', $user->id)
+                ->get();
+        } else { // farmer
+            $offers = Offer::where('status', 'accepted')
+                ->where('user_id', $user->id)
+                // ->where('expires_at', '>', now()) # active only
+                ->with('asset')
+                ->get();
+
+            foreach($offers as $offer) {
+                array_push($assets, $offer->asset);
+            }
+        }
 
         if (!$assets) {
             return response()->json(
@@ -80,8 +88,6 @@ class UserController extends Controller
         foreach ($assets as $asset) {
             $asset->occupied = Utils::getOccupiedUnits($asset);
         }
-
-        $assets->rented = $rentAssets;
 
         return response()->json(
             [
