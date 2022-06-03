@@ -70,7 +70,7 @@ class UserController extends Controller
                 ->with('asset')
                 ->get();
 
-            foreach($offers as $offer) {
+            foreach ($offers as $offer) {
                 array_push($assets, $offer->asset);
             }
         }

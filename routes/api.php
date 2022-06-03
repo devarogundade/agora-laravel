@@ -14,7 +14,7 @@ Route::get('/', function () {
 # auth
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-Route::post('verify-me', [AuthController::class, 'verifyMe']);
+Route::post('verify', [AuthController::class, 'verify']);
 
 # search
 Route::get('search', [SearchController::class, 'search']);

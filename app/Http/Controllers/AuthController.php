@@ -116,4 +116,28 @@ class AuthController extends Controller
         );
     }
 
+
+    public function verify(Request $request)
+    {
+        $user = $request->user();
+
+        $update = $user->update([
+            'verified_at' => now()
+        ]);
+
+        if (!$update) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Can not verify your kyc documents',
+                'data' => null
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Your your kyc documents are verified',
+            'data' => null
+        ]);
+    }
+
 }
