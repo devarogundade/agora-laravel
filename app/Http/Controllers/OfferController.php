@@ -16,6 +16,14 @@ class OfferController extends Controller
     public function create(Request $request)
     {
         $user = $request->user();
+
+        if ($user->verified_at == null) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Your account is not yet verified'
+            ], 200);
+        }
+
         $asset = Asset::where('id', $request->id)->first();
 
         if ($user->id == $asset->user_id) {
