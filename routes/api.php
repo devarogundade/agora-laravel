@@ -29,7 +29,7 @@ Route::get('assets/location', [AssetController::class, 'locationAssets']);
 Route::middleware(['auth:sanctum'])->group(function () {
     # user
     Route::get('user', [UserController::class, 'user']);
-    Route::post('verify', [UserController::class, 'verify']);
+    Route::get('verify', [UserController::class, 'verify']);
 
     # create assets
     Route::post('create/asset', [AssetController::class, 'create']);
