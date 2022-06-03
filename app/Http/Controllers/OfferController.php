@@ -189,13 +189,13 @@ class OfferController extends Controller
     {
         $user = $request->user();
 
-        Log::debug("mission");
-
         $offers = Offer::where('user_id', $user->id)
-            ->orWhereHas('asset', function($query) use ($user) {
+            ->orWhereHas('asset', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->with('asset')
+            ->orderBy('price', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
 
