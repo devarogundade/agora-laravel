@@ -14,7 +14,6 @@ Route::get('/', function () {
 # auth
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-Route::post('verify', [AuthController::class, 'verify']);
 
 # search
 Route::get('search', [SearchController::class, 'search']);
@@ -30,6 +29,7 @@ Route::get('assets/location', [AssetController::class, 'locationAssets']);
 Route::middleware(['auth:sanctum'])->group(function () {
     # user
     Route::get('user', [UserController::class, 'user']);
+    Route::post('verify', [UserController::class, 'verify']);
 
     # create assets
     Route::post('create/asset', [AssetController::class, 'create']);
