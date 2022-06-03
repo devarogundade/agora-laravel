@@ -104,7 +104,7 @@ class UserController extends Controller
         $user = $request->user();
 
         $update = User::where('id', $user->id)->first()->update([
-            'verified_at' => now()
+            'email_verified_at' => now()
         ]);
 
         if (!$update) {
