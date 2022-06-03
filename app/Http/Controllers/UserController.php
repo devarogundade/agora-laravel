@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\Offer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -102,7 +103,7 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $update = $user->update([
+        $update = User::where('id', $user->id)->first()->update([
             'verified_at' => now()
         ]);
 
