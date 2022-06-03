@@ -17,6 +17,13 @@ class AssetController extends Controller
     {
         $user = $request->user();
 
+        if ($user->verified_at == null) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Your account is not yet verified'
+            ], 200);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'unit' => 'required|integer',

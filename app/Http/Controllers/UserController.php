@@ -111,13 +111,13 @@ class UserController extends Controller
                 'status' => false,
                 'message' => 'Can not verify your kyc documents',
                 'data' => null
-            ]);
+            ], 200);
         }
 
         return response()->json([
             'status' => true,
             'message' => 'Your your kyc documents are verified',
             'data' => null
-        ]);
+        ], 200);
     }
 }
