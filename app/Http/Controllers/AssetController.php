@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -235,7 +236,7 @@ class AssetController extends Controller
                 ->orWhere('price', 'like', "% {$request->text} %")
                 ->orWhere('metadata', 'like', "%{$request->text}%")
                 ->orWhere('about', 'like', "%{$request->text}%");
-        })->get()->groupBy('state')->toArray();
+        })->get()->groupBy('state')->select('browser', DB::raw('count(*) as total'));
 
 
         if (!$assets) {
