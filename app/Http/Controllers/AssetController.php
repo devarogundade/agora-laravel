@@ -236,7 +236,7 @@ class AssetController extends Controller
                 ->orWhere('price', 'like', "% {$request->text} %")
                 ->orWhere('metadata', 'like', "%{$request->text}%")
                 ->orWhere('about', 'like', "%{$request->text}%");
-        })->get()->select('browser', DB::raw('count(*) as total'))->groupBy('state');
+        })->get()->groupBy('state');
 
 
         if (!$assets) {
