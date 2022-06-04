@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
+use App\Models\Asset;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,6 +18,9 @@ Route::post('register', [AuthController::class, 'register']);
 
 # search
 Route::get('search', [SearchController::class, 'search']);
+
+# farm-guide
+Route::get('search', [AssetController::class, 'farmGuide']);
 
 # asset
 Route::get('assets', [AssetController::class, 'assets']);
