@@ -225,4 +225,26 @@ class AssetController extends Controller
             200
         );
     }
+
+    # farm-guide
+    public function farmGuide(Request $request) {
+        // $keywords = explode(" ", $request->text);
+
+        // $assets = Asset::where(function ($query) use ($keywords) {
+        //     foreach ($keywords as $keyword) {
+        //         $query->orWhere('type', 'like', "%{$keyword}%")
+        //             ->orWhere('state', 'like', "%{$keyword}%")
+        //             ->orWhere('location', 'like', "%{$keyword}%")
+        //             ->orWhere('name', 'like', "%{$keyword}%")
+        //             ->orWhere('price', 'like', "% {$keyword} %")
+        //             ->orWhere('metadata', 'like', "%{$keyword}%")
+        //             ->orWhere('about', 'like', "%{$keyword}%");
+        //     }
+        // })->groupBy('state')->get();
+
+        $assets = Asset::groupBy('state')->get();
+
+        return $assets;
+
+    }
 }
