@@ -7,6 +7,7 @@ use App\Models\Image;
 use App\Models\Offer;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -227,7 +228,8 @@ class AssetController extends Controller
     }
 
     # farm-guide
-    public function farmGuide(Request $request) {
+    public function farmGuide(Request $request)
+    {
         // $keywords = explode(" ", $request->text);
 
         // $assets = Asset::where(function ($query) use ($keywords) {
@@ -242,9 +244,11 @@ class AssetController extends Controller
         //     }
         // })->groupBy('state')->get();
 
-        $assets = Asset::groupBy('state')->get();
+        $assets = DB::table('assets')
+            ->select('state', DB::raw('count(*) as total'))
+            ->groupBy('state')
+            ->get();
 
         return $assets;
-
     }
 }
