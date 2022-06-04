@@ -244,7 +244,7 @@ class AssetController extends Controller
         //     }
         // })->groupBy('state')->get();
 
-        $assets = Asset::all()->groupBy('column');
+        $assets = Asset::all()->groupBy('state');
 
         return $assets;
     }
