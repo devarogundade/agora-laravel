@@ -230,18 +230,14 @@ class AssetController extends Controller
     # farm-guide
     public function farmGuide(Request $request)
     {
-        $keywords = explode(" ", $request->text);
-
-        $assets = Asset::where(function ($query) use ($keywords) {
-            foreach ($keywords as $keyword) {
-                $query->orWhere('type', 'like', "%{$keyword}%")
-                    ->orWhere('state', 'like', "%{$keyword}%")
-                    ->orWhere('location', 'like', "%{$keyword}%")
-                    ->orWhere('name', 'like', "%{$keyword}%")
-                    ->orWhere('price', 'like', "% {$keyword} %")
-                    ->orWhere('metadata', 'like', "%{$keyword}%")
-                    ->orWhere('about', 'like', "%{$keyword}%");
-            }
+        $assets = Asset::where(function ($query) use ($request) {
+            $query->orWhere('type', 'like', "%{$request->text}%")
+                ->orWhere('state', 'like', "%{$request->text}%")
+                ->orWhere('location', 'like', "%{$request->text}%")
+                ->orWhere('name', 'like', "%{$request->text}%")
+                ->orWhere('price', 'like', "% {$request->text} %")
+                ->orWhere('metadata', 'like', "%{$request->text}%")
+                ->orWhere('about', 'like', "%{$request->text}%");
         })->get()->groupBy('state');
 
         return $assets;
