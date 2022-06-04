@@ -244,10 +244,7 @@ class AssetController extends Controller
         //     }
         // })->groupBy('state')->get();
 
-        $assets = DB::table('assets')
-            ->select('state', DB::raw('count(*) as total'))
-            ->groupBy('state')
-            ->get();
+        $assets = Asset::all()->groupBy('column');
 
         return $assets;
     }
