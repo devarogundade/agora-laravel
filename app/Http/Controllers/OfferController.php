@@ -17,7 +17,7 @@ class OfferController extends Controller
     {
         $user = $request->user();
 
-        if ($user->verified_at == null) {
+        if ($user->email_verified_at == null) {
             return response()->json([
                 'status' => false,
                 'message' => 'Your account is not yet verified'

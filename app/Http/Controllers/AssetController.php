@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\Image;
-use App\Models\Offer;
-use App\Models\Video;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +15,7 @@ class AssetController extends Controller
     {
         $user = $request->user();
 
-        if ($user->verified_at == null) {
+        if ($user->email_verified_at == null) {
             return response()->json([
                 'status' => false,
                 'message' => 'Your account is not yet verified'
