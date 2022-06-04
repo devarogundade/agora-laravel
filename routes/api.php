@@ -20,7 +20,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::get('search', [SearchController::class, 'search']);
 
 # farm-guide
-Route::get('search', [AssetController::class, 'farmGuide']);
+Route::get('farm-guide', [AssetController::class, 'farmGuide']);
 
 # asset
 Route::get('assets', [AssetController::class, 'assets']);
