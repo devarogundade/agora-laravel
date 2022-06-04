@@ -237,6 +237,24 @@ class AssetController extends Controller
                 ->orWhere('about', 'like', "%{$request->text}%");
         })->get()->groupBy('state');
 
-        return $assets;
+
+        if (!$assets) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => 'Something went wrong'
+                ],
+                200
+            );
+        }
+
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'Result',
+                'data' => $assets
+            ],
+            200
+        );
     }
 }
