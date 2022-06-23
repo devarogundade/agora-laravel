@@ -180,12 +180,12 @@ class OfferController extends Controller
 
         try {
             DB::transaction(function () use ($farmer, $offer) {
+                if ($offer->status != 'accepted') {
+                    throw new Exception('You can only confirm received of an accepted offer');
+                }
+
                 $lessor = $offer->asset->user();
                 $amount = Utils::getAmount($offer);
-
-                if ($amount > $farmer->locked) {
-                    throw new Exception('You do not have sufficient funds');
-                }
 
                 $lessor->decrement('locked', $amount);
                 $lessor->increment('balance', $amount - Utils::getFee($amount));
