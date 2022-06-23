@@ -79,8 +79,9 @@ class UserController extends Controller
         if (!$assets) {
             return response()->json(
                 [
-                    'status' => false,
-                    'message' => 'Something went wrong'
+                    'status' => true,
+                    'message' => 'No asset found',
+                    'data' => []
                 ],
                 200
             );
