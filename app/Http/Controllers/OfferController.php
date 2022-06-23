@@ -186,10 +186,10 @@ class OfferController extends Controller
                 }
 
                 $lessor = $offer->asset->user();
-                $amount = $offer->duration * $offer->price;
+                $amount = ($offer->duration * $offer->price);
 
                 if ($amount > $farmer->locked) {
-                    throw new Exception($farmer->name . ' do not sufficient funds');
+                    throw new Exception('You do not sufficient funds');
                 }
 
                 $lessor->increment('balance', $amount - Utils::getFee($amount));
