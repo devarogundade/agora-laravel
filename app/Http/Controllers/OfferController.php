@@ -15,9 +15,9 @@ class OfferController extends Controller
     # create
     public function create(Request $request)
     {
-        $user = $request->user();
+        $farmer = $request->user();
 
-        if ($user->email_verified_at == null) {
+        if ($farmer->email_verified_at == null) {
             return response()->json([
                 'status' => false,
                 'message' => 'Your account is not yet verified'
@@ -26,7 +26,7 @@ class OfferController extends Controller
 
         $asset = Asset::where('id', $request->id)->first();
 
-        if ($user->id == $asset->user_id) {
+        if ($farmer->id == $asset->user_id) {
             return response()->json(
                 [
                     'status' => false,
@@ -41,6 +41,16 @@ class OfferController extends Controller
                 [
                     'status' => false,
                     'message' => 'This asset does not exist'
+                ],
+                200
+            );
+        }
+
+        if ($farmer->balance < ($asset->price * $request->duration)) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => 'You do not have sufficient funds to place this offer'
                 ],
                 200
             );
@@ -63,7 +73,7 @@ class OfferController extends Controller
             'price' => $request->price,
             'status' => 'pending',
             'asset_id' => $asset->id,
-            'user_id' => $user->id,
+            'user_id' => $farmer->id,
             'expires_at' => null
         ]);
 
