@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
-use App\Models\Asset;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -58,6 +57,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     # cancel offer
     Route::get('cancel/offer', [OfferController::class, 'cancel']);
+
+    # reject offer
+    Route::get('cancel/offer', [OfferController::class, 'reject']);
+
+    # received item
+    Route::get('received/offer', [OfferController::class, 'received']);
 
     # user offers
     Route::get('user/offers', [OfferController::class, 'userOffers']);

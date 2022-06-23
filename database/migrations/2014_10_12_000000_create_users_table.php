@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->integer('balance')->default(0);
+            $table->integer('locked')->default(0);
             $table->string('email')->unique();
             $table->integer('purpose');
             $table->timestamp('email_verified_at')->nullable();

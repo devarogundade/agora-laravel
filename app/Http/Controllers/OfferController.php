@@ -90,10 +90,10 @@ class OfferController extends Controller
     # accept
     public function accept(Request $request)
     {
-        $user = $request->user();
+        $lessor = $request->user();
 
         $asset = Asset::where('id', $request->id)
-            ->where('user_id', $user->id)
+            ->where('user_id', $lessor->id)
             ->first();
 
         $offer = Offer::where('id', $request->offer_id)
@@ -110,16 +110,16 @@ class OfferController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($user, $offer) {
-                $renter = User::where('id', $offer->user_id)->first();
+            DB::transaction(function () use ($lessor, $offer) {
+                $farmer = User::where('id', $offer->user_id)->first();
                 $amount = $offer->duration * $offer->price;
 
-                if ($amount > $renter->balance) {
-                    throw new Exception($renter->name . ' do not sufficient funds');
+                if ($amount > $farmer->balance) {
+                    throw new Exception($farmer->name . ' do not sufficient funds');
                 }
 
-                $user->increment('balance', $amount - Utils::getFee($amount));
-                $renter->decrement('balance', $amount);
+                $farmer->decrement('balance', $amount);
+                $farmer->increment('locked', $amount);
 
                 $offer->update([
                     'status' => 'accepted',
@@ -146,7 +146,70 @@ class OfferController extends Controller
         );
     }
 
-    # reject
+    # received
+    public function received(Request $request)
+    {
+        $farmer = $request->user();
+
+        $offer = Offer::where('id', $request->offer_id)
+            ->first();
+
+        if (!$offer) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => 'Offer does not exist',
+                ],
+                200
+            );
+        }
+
+        try {
+            DB::transaction(function () use ($farmer, $offer) {
+                if ($offer->status != 'accept') {
+                    throw new Exception('You can only confirm received of an accepted offer');
+                }
+
+                $lessor = $offer->asset->user();
+                $amount = $offer->duration * $offer->price;
+
+                if ($amount > $farmer->locked) {
+                    throw new Exception($farmer->name . ' do not sufficient funds');
+                }
+
+                $lessor->increment('balance', $amount - Utils::getFee($amount));
+                $farmer->decrement('locked', $amount);
+
+                $offer->update([
+                    'status' => 'accepted',
+                    'expires_at' => now(),
+                    'stage' => 'clearing'
+                ]);
+
+                $offer->update([
+                    'status' => 'received'
+                ]);
+            });
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ],
+                200
+            );
+        }
+
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'You have confirmed receiving this item'
+            ],
+            200
+        );
+    }
+
+    # cancel
     public function cancel(Request $request)
     {
         $offer = Offer::where('id', $request->offer_id)
@@ -169,7 +232,7 @@ class OfferController extends Controller
                 }
 
                 $offer->update([
-                    'status' => 'rejected',
+                    'status' => 'cancelled',
                     'expires_at' => now()
                 ]);
             });
@@ -187,6 +250,63 @@ class OfferController extends Controller
             [
                 'status' => true,
                 'message' => 'Offer cancelled'
+            ],
+            200
+        );
+    }
+
+    # reject
+    public function reject(Request $request)
+    {
+        $offer = Offer::where('id', $request->offer_id)
+            ->first();
+
+        if (!$offer) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => 'Offer does not exist',
+                ],
+                200
+            );
+        }
+
+        try {
+            DB::transaction(function () use ($offer) {
+                if ($offer->status != 'pending') {
+                    throw new Exception('You can only reject a pending offer');
+                }
+
+                $farmer = User::where('id', $offer->user_id)->first();
+                $amount = $offer->duration * $offer->price;
+
+                if ($amount >= $farmer->locked) {
+                    $farmer->decrement('locked', $amount);
+                } else {
+                    $farmer->decrement('locked', $farmer->locked);
+                }
+
+                $farmer->increment('balance', $amount);
+
+                $offer->update([
+                    'status' => 'rejected',
+                    'expires_at' => now()
+                ]);
+            });
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ],
+                200
+            );
+        }
+
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'Offer rejected'
             ],
             200
         );
