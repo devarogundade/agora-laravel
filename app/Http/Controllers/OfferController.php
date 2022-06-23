@@ -47,7 +47,7 @@ class OfferController extends Controller
 
         $amount = ($asset->price * $request->duration * $request->unit);
 
-        if ($farmer->balance < $amount) {
+        if ($amount > $farmer->balance) {
             return response()->json(
                 [
                     'status' => false,
