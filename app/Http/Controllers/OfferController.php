@@ -46,7 +46,9 @@ class OfferController extends Controller
             );
         }
 
-        if ($farmer->balance < ($asset->price * $request->duration)) {
+        $amount = ($asset->price * $request->duration);
+
+        if ($farmer->balance < $amount) {
             return response()->json(
                 [
                     'status' => false,
@@ -66,6 +68,9 @@ class OfferController extends Controller
                 200
             );
         }
+
+        $farmer->increment('locked', $amount);
+        $farmer->decrement('balance', $amount);
 
         $offer = Offer::create([
             'duration' => $request->duration,
