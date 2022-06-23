@@ -181,7 +181,7 @@ class OfferController extends Controller
 
         try {
             DB::transaction(function () use ($farmer, $offer) {
-                if ($offer->status != 'accept') {
+                if ($offer->status != 'accepted') {
                     throw new Exception('You can only confirm received of an accepted offer');
                 }
 
