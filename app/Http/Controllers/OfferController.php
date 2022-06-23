@@ -132,6 +132,9 @@ class OfferController extends Controller
                     throw new Exception($farmer->name . ' do not sufficient funds');
                 }
 
+                $farmer->decrement('locked', $amount);
+                $lessor->increment('locked', $amount);
+
                 $offer->update([
                     'status' => 'accepted',
                     'expires_at' => now(),
@@ -185,11 +188,11 @@ class OfferController extends Controller
                 $amount = Utils::getAmount($offer);
 
                 if ($amount > $farmer->locked) {
-                    throw new Exception('You do not sufficient funds');
+                    throw new Exception('You do not have sufficient funds');
                 }
 
+                $lessor->decrement('locked', $amount);
                 $lessor->increment('balance', $amount - Utils::getFee($amount));
-                $farmer->decrement('locked', $amount);
 
                 $offer->update([
                     'status' => 'accepted',
