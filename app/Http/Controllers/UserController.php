@@ -65,6 +65,7 @@ class UserController extends Controller
                 ->get();
         } else { // farmer
             $offers = Offer::where('status', 'accepted')
+                ->orWhere('status', 'received')
                 ->where('user_id', $user->id)
                 // ->where('expires_at', '>', now()) # active only
                 ->with('asset')
