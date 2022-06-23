@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('cancel/offer', [OfferController::class, 'cancel']);
 
     # reject offer
-    Route::get('cancel/offer', [OfferController::class, 'reject']);
+    Route::get('reject/offer', [OfferController::class, 'reject']);
 
     # received item
     Route::get('received/offer', [OfferController::class, 'received']);
