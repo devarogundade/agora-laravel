@@ -13,7 +13,7 @@ class Utils extends Controller
     }
 
     public static function getAmount($offer) {
-        return $offer->price * $offer->duration * $offer->unit;
+        return ($offer->price * $offer->duration * $offer->unit);
     }
 
     public static function generateRandom($min = 1, $max = 20)

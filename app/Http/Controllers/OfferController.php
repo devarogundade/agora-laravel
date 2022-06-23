@@ -128,12 +128,9 @@ class OfferController extends Controller
                 $farmer = User::where('id', $offer->user_id)->first();
                 $amount = Utils::getAmount($offer);
 
-                if ($amount > $farmer->balance) {
+                if ($amount > $farmer->locked) {
                     throw new Exception($farmer->name . ' do not sufficient funds');
                 }
-
-                $farmer->decrement('balance', $amount);
-                $farmer->increment('locked', $amount);
 
                 $offer->update([
                     'status' => 'accepted',
