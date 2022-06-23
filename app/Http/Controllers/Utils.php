@@ -12,6 +12,10 @@ class Utils extends Controller
         return $amount * self::$PLATFORM_FEE;
     }
 
+    public static function getAmount($offer) {
+        return $offer->price * $offer->duration * $offer->unit;
+    }
+
     public static function generateRandom($min = 1, $max = 20)
     {
         if (function_exists('random_int')) :

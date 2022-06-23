@@ -8,7 +8,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OfferController extends Controller
 {
@@ -46,7 +45,7 @@ class OfferController extends Controller
             );
         }
 
-        $amount = ($asset->price * $request->duration);
+        $amount = ($asset->price * $request->duration * $request->unit);
 
         if ($farmer->balance < $amount) {
             return response()->json(
@@ -127,7 +126,7 @@ class OfferController extends Controller
         try {
             DB::transaction(function () use ($lessor, $offer) {
                 $farmer = User::where('id', $offer->user_id)->first();
-                $amount = $offer->duration * $offer->price;
+                $amount = Utils::getAmount($offer);
 
                 if ($amount > $farmer->balance) {
                     throw new Exception($farmer->name . ' do not sufficient funds');
@@ -186,7 +185,7 @@ class OfferController extends Controller
                 }
 
                 $lessor = $offer->asset->user();
-                $amount = ($offer->duration * $offer->price);
+                $amount = Utils::getAmount($offer);
 
                 if ($amount > $farmer->locked) {
                     throw new Exception('You do not sufficient funds');
@@ -293,7 +292,7 @@ class OfferController extends Controller
                 }
 
                 $farmer = User::where('id', $offer->user_id)->first();
-                $amount = $offer->duration * $offer->price;
+                $amount = Utils::getAmount($offer);
 
                 if ($amount >= $farmer->locked) {
                     $farmer->decrement('locked', $amount);
@@ -340,9 +339,6 @@ class OfferController extends Controller
             ->orderBy('price', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
-
-
-        Log::debug("complete");
 
         if (!$offers) {
             return response()->json(
