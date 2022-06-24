@@ -30,8 +30,7 @@ class Utils extends Controller
     public static function getOccupiedUnits(Asset $asset)
     {
         $offers = $asset->offers()
-            ->where('status', 'accepted')
-            ->orWhere('status', 'received')
+            ->where('status', 'received')
             // ->where('expires_at', '>', now()) # active only
             ->get();
 
