@@ -222,6 +222,8 @@ class OfferController extends Controller
     # cancel
     public function cancel(Request $request)
     {
+        $farmer = $request->user();
+
         $offer = Offer::where('id', $request->offer_id)
             ->first();
 
@@ -236,10 +238,15 @@ class OfferController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($offer) {
+            DB::transaction(function () use ($farmer, $offer) {
                 if ($offer->status != 'pending') {
                     throw new Exception('You can only cancel a pending offer');
                 }
+
+                $amount = Utils::getAmount($offer);
+
+                $farmer->increment('balance', $amount);
+                $farmer->decrement('locked', $amount);
 
                 $offer->update([
                     'status' => 'cancelled',
@@ -286,17 +293,6 @@ class OfferController extends Controller
                 if ($offer->status != 'pending') {
                     throw new Exception('You can only reject a pending offer');
                 }
-
-                $farmer = User::where('id', $offer->user_id)->first();
-                $amount = Utils::getAmount($offer);
-
-                if ($amount >= $farmer->locked) {
-                    $farmer->decrement('locked', $amount);
-                } else {
-                    $farmer->decrement('locked', $farmer->locked);
-                }
-
-                $farmer->increment('balance', $amount);
 
                 $offer->update([
                     'status' => 'rejected',
